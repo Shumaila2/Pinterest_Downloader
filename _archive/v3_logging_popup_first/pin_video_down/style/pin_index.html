@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Magic Python App</title>
+    <link rel="stylesheet" href="style.css">
+    
+</head>
+<body>
+    <h1>Pinterest Downloader</h1>
+
+    <div id="loading">⚙️ Initializing app, please wait...</div>
+
+    <button onclick="browse()" id="select_folder">Select Folder</button>
+    
+    <div id="folderDisplay"></div>
+
+    <input id="url" type="text" title="Link" placeholder="https://www.pinterest.com/pin/..." size="70">
+    
+    <button onclick="download()" id="download">Download!</button>
+    <p id="progressText"></p>
+        <div id="progressBar">
+        <div id="progressFill"></div>
+    </div>
+
+    <div id="result"></div>
+
+    <button onclick="changeCookies()" id="changeCookies" style="margin-top:40px; background-color:#999;">Change cookies</button>
+
+
+    <!--JavaScript to handle button clicks and progress updates-->
+    <script>
+        
+        document.getElementById('select_folder').disabled = true;
+        document.getElementById('download').disabled = true;
+        function backendReady() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('select_folder').disabled = false;
+            document.getElementById('download').disabled = false;
+        };
+
+        let selectedFolder = "";
+
+        function browse(){
+            window.pywebview.api.select_folder().then(folder => {
+                if (folder && folder.length > 0) {
+                    selectedFolder = folder[0];
+                    document.getElementById('folderDisplay').innerHTML = '<img src="dev-icon-89 (1).svg" alt="Folder Icon" width="20" height="20"> Selected folder: ' + selectedFolder;
+                }
+            })
+        }
+
+        function downloadFinished(message) {
+            const result = document.getElementById('result');
+            const btn = document.getElementById('download');
+            btn.disabled = false;
+
+            // Reset progress
+            document.getElementById("progressText").textContent = "";
+            document.getElementById("progressFill").style.width = "0%";
+
+            if (message && message.includes("complete")) {
+                    result.innerHTML = '✔ Download complete!';
+                    result.classList.remove('warning');
+                    result.classList.add('success');
+                }
+            else {
+                result.innerHTML = message || '✖ Failed to download. Try again.';
+                result.classList.remove('success');
+                result.classList.add('warning');
+            }
+        }
+
+        function download() {
+            const url = document.getElementById('url').value;
+            const result = document.getElementById('result');
+
+            if (result.classList.contains('warning') || result.classList.contains('success')){
+                result.style.transition = "opacity 0.5s ease-out";
+                result.style.opacity = 0;
+                setTimeout(() => {
+                    result.classList.remove('warning', 'success');
+                    result.innerHTML = '';
+                    result.style.opacity = 1;
+                }, 500);
+            }
+
+            if(!url || !selectedFolder) {
+                result.innerHTML = '✖ Please enter URL and select folder first!';
+                result.classList.add('warning');
+                return;
+            }
+
+            if (!url.startsWith("http")) {
+                result.innerHTML = '✖ Please enter a valid URL!';
+                result.classList.add('warning');
+                return;
+            }
+
+            if (url && selectedFolder){ 
+                const btn = document.getElementById('download');
+                const result = document.getElementById('result');
+
+                btn.disabled = true;
+
+                window.pywebview.api.download(url, selectedFolder).then(response => {
+
+                    result.innerHTML = response;
+                    result.classList.remove('warning', 'success');
+                    
+                }).catch(err => {
+                    const result = document.getElementById('result');
+                    result.innerHTML = '✖ Failed to download. Try again.';
+                    result.classList.remove('success');
+                    result.classList.add('warning');
+                    btn.disabled = false;
+                });
+                
+            } 
+        }
+
+        function changeCookies() {
+            if (!confirm("This deletes your saved Pinterest cookies. Continue?")) return;
+            window.pywebview.api.reset_cookies().then(ok => {
+                const result = document.getElementById('result');
+                if (ok) {
+                    result.innerHTML = '✔ Cookies cleared. Close the app and reopen it to enter new ones.';
+                    result.classList.remove('warning');
+                    result.classList.add('success');
+                } else {
+                    result.innerHTML = '✖ Could not clear cookies.';
+                    result.classList.remove('success');
+                    result.classList.add('warning');
+                }
+            });
+        }
+            
+        function updateProgress(percent) {
+            const p = document.getElementById("progressText");
+            const fill = document.getElementById("progressFill");
+
+            // Extract just the number (e.g., "9.5" from "9.5%")
+            const match = percent.match(/([\d.]+)%/);
+            const value = match ? parseFloat(match[1]) : 0;
+
+            p.textContent = `Downloading... ${value.toFixed(1)}%`;
+            fill.style.width = `${value}%`;
+        }
+    </script>
+
+    
+    
+</body> 
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Log in to Pinterest</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div id="page1" class="page">
+        <h1>Log in to Pinterest (optional)</h1>
+        <p>Public pins download without logging in. Logging in is only for pins tied to your account, and private pins may still not work.</p>
+        <p><small>Your cookies stay on this computer.</small></p>
+        <button onclick="nextPage(2)">Continue</button>
+        <button onclick="closeWindow()" style="background:#999;">Cancel</button>
+    </div>
+
+    <div id="page2" class="page hidden">
+        <h2>Step 1: Copy your Pinterest cookies</h2>
+        <ol style="text-align:left; display:inline-block; margin:0 0 10px 0;">
+            <li>Open <b>pinterest.com</b> in Chrome or Edge and make sure you are <b>logged in</b>.</li>
+            <li>Press <b>F12</b> and open the <b>Application</b> tab (Firefox: <b>Storage</b>).</li>
+            <li>On the left, open <b>Cookies</b> and click <b>https://www.pinterest.com</b>.</li>
+            <li>Copy the <b>Value</b> of these four rows into the boxes below.</li>
+        </ol>
+        <p><small>Tip: <b>_auth</b> should be <b>1</b> when you're logged in. Cookies work like a password, so don't share them. They're saved only on this computer.</small></p>
+
+        <label>csrftoken</label>
+        <input type="text" id="csrftoken" placeholder="Paste csrftoken value here"><br>
+        <label>_pinterest_sess</label>
+        <input type="text" id="_pinterest_sess" placeholder="Paste _pinterest_sess value here"><br>
+        <label>_auth</label>
+        <input type="text" id="_auth" placeholder="Paste _auth value here"><br>
+        <label>_routing_id</label>
+        <input type="text" id="_routing_id" placeholder="Paste _routing_id value here"><br>
+        <button onclick="saveCookies()">Save Cookies</button>
+        <button onclick="closeWindow()" style="background:#999;">Cancel</button>
+    </div>
+
+    <div id="page3" class="page hidden">
+        <h1>You're logged in! 🎉</h1>
+        <p>Your cookies are saved. This window will close by itself.</p>
+    </div>
+
+    <div id="page4" class="page hidden">
+        <h1>Oops! 🤕</h1>
+        <p id="errorMessage">Invalid cookies. Please paste fresh ones from your browser.</p>
+        <button onclick="nextPage(2)">Go Back</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

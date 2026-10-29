@@ -1,0 +1,6 @@
+cookies.json
+__pycache__/
+build_env/
+build/
+dist/
+*.spec
