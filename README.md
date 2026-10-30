@@ -171,7 +171,7 @@ The finished app is the whole `dist\PinterestDownloader` folder. To share it, zi
 
 ## 📥 Download
 
-Just want the app? Open the **[Releases](https://github.com/YOUR-USERNAME/YOUR-REPO/releases)** page, download the latest `PinterestDownloader.zip`, unzip it, and double-click `PinterestDownloader.exe`. No installation needed.
+Just want the app? Open the **[latest release](https://github.com/Shumaila2/Pinterest_Downloader/releases/latest)**, download `Pinterest_Downloader.exe`, and run it. No Python or ffmpeg needed.
 
 > Windows may show "Windows protected your PC" the first time, because the app is unsigned. Click *More info*, then *Run anyway*.
 
