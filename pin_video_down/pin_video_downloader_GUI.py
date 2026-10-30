@@ -99,8 +99,10 @@ def _download_with_ytdlp(url, download_path, output_template, progress_callback)
         cookies = _load_flat_cookies()
 
         with tempfile.TemporaryDirectory() as tmpdir:
-            ffmpeg_local = Path(resource_path("pin_video_down")) / ("ffmpeg.exe" if os.name == "nt" else "ffmpeg")
-            ffmpeg_location = str(ffmpeg_local) if ffmpeg_local.exists() else None
+            ffmpeg_dir = Path(resource_path("pin_video_down"))
+            ffmpeg_exe = ffmpeg_dir / ("ffmpeg.exe" if os.name == "nt" else "ffmpeg")
+            # give yt-dlp the FOLDER, not the path of the .exe file
+            ffmpeg_location = str(ffmpeg_dir) if ffmpeg_exe.exists() else None
 
             if download_path:
                 Path(download_path).mkdir(parents=True, exist_ok=True)
